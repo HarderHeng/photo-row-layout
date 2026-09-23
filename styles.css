@@ -1,0 +1,121 @@
+/* Photo Row Layout — Obsidian preview styles
+ *
+ * Values mirror the site project's src/styles/photo-layout.css (gap: min(3vw, 15px) from linen;
+ * captions at .8em in muted grey); class names keep an hh- prefix so themes cannot clash with them.
+ *
+ * Note: wide / full only read as "a bit wider than the text column" in a note (negative margins);
+ * the real widths (1080 / 1600px) depend on the page width and only exist on the site.
+ */
+
+/* one row */
+.hh-prow {
+  --pgap: min(3vw, 15px);
+
+  display: flex;
+  gap: var(--pgap);
+  width: 100%;
+  margin: 1.8rem 0;
+}
+
+.hh-prow-set {
+  display: flex;
+  flex-direction: column;
+  margin: 1.8rem 0;
+}
+
+.hh-prow-set .hh-prow {
+  margin: 0 0 var(--pgap);
+}
+
+.hh-prow-set .hh-prow:last-child {
+  margin-bottom: 0;
+}
+
+/* single image: column width = (row width − gaps) × this image's share */
+.hh-pfig {
+  flex: 0 0 calc((100% - var(--pgap, 15px) * (var(--pn, 1) - 1)) * var(--fb, 1));
+  min-width: 0;
+  margin: 0;
+}
+
+.hh-pfig img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--ar, auto);
+  object-fit: cover;
+
+  border-radius: 6px;
+  background-color: rgba(127, 127, 127, 0.1);
+}
+
+.hh-pfig figcaption {
+  margin-top: 0.35em;
+
+  font-size: 0.8em;
+  line-height: 1.55;
+  color: #575757;
+  text-align: left;
+}
+
+.theme-dark .hh-pfig figcaption {
+  color: #9d9d9d;
+}
+
+.hh-pfig .hh-pfig-exif {
+  display: block;
+
+  opacity: 0.72;
+  font-variant-numeric: tabular-nums;
+}
+
+/* break out of the text column (approximate inside a note pane) */
+.hh-prow.hh-pw-wide,
+.hh-prow-set.hh-pw-wide {
+  width: calc(100% + 6rem);
+  margin-inline: -3rem;
+}
+
+.hh-prow.hh-pw-full,
+.hh-prow-set.hh-pw-full {
+  width: calc(100% + 12rem);
+  margin-inline: -6rem;
+}
+
+/* masonry */
+.hh-prow-masonry {
+  display: block;
+
+  columns: var(--pcols, 2);
+  column-gap: var(--pgap);
+}
+
+.hh-prow-masonry .hh-pfig {
+  break-inside: avoid;
+  margin: 0 0 var(--pgap);
+}
+
+/* horizontal scroll */
+.hh-prow-scroll {
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 0.3rem;
+}
+
+.hh-prow-scroll .hh-pfig {
+  flex: 0 0 min(86%, 760px);
+  scroll-snap-align: center;
+}
+
+@media (max-width: 640px) {
+  .hh-prow-n3,
+  .hh-prow-n4 {
+    flex-wrap: wrap;
+  }
+
+  .hh-prow-n3 .hh-pfig,
+  .hh-prow-n4 .hh-pfig {
+    flex: 0 0 calc((100% - var(--pgap)) / 2);
+  }
+}
