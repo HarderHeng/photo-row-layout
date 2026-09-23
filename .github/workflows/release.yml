@@ -1,0 +1,51 @@
+name: Release Obsidian plugin
+
+# 推一个与 manifest.json 里 version 同名的标签，这个 workflow 会自动建好 release 并挂上
+# main.js / manifest.json / styles.css 三个附件（用户装插件/自动更新就是下这三个）。
+#
+# 首次启用需要在仓库里点一次：Settings → Actions → General → Workflow permissions
+#   → 选 "Read and write permissions" → Save
+#
+# 本插件是单文件、没有构建步骤，仓库里的 main.js 就是产物本身，所以这里不跑 npm。
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # 签名构建来源证明（提交到社区目录时推荐有）
+      - name: Generate artifact attestation
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            main.js
+            manifest.json
+            styles.css
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF#refs/tags/}"
+          ver=$(python3 -c "import json;print(json.load(open('manifest.json'))['version'])")
+          if [ "$tag" != "$ver" ]; then
+            echo "标签 $tag 与 manifest.json 里的 version $ver 不一致 —— 拒绝发布。"
+            echo "Obsidian 只在两者相等时才会把 release 里的资产发给用户。"
+            exit 1
+          fi
+          gh release create "$tag" \
+            --title="$tag" \
+            --generate-notes \
+            main.js manifest.json styles.css
+          echo "已发布 $tag"

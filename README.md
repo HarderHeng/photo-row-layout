@@ -133,11 +133,18 @@ It expects a JSON response such as:
 the rest without waiting for the index to be fetched again. If the request fails, nothing is inserted and the
 image stays on your clipboard.
 
-## Privacy
+## Network use and privacy
 
-The plugin has no telemetry and no analytics. It makes network requests only to the URLs you configure in its
-settings: the album index, the direct base (a single reachability probe), and the upload endpoint when you
-enable uploading.
+No telemetry, no analytics, no accounts, and no data leaves your vault unless you configure something that
+asks for it. The plugin only talks to the URLs below, all of which you set yourself:
+
+| Request | When | Why |
+| --- | --- | --- |
+| `Album index URL` | Once at startup (and when you press *Reload*) | Fetch image dimensions, variant widths and EXIF, so rows can be planned before the images load |
+| `Direct base URL` | One reachability probe at startup, then every 3 minutes while configured | Decide whether previews should load from that base instead of the site base |
+| `Upload URL` | Only when you paste or drop an image **and** uploading is enabled | Send the image to your own endpoint, which returns the path to insert |
+
+Leaving those fields empty means the plugin makes no requests at all.
 
 ## Development
 
@@ -145,6 +152,13 @@ The row engine is a mirror of the one used by the site generator this plugin was
 kept in sync by an equivalence test against the same album data. If you fork this and change the engine, keep
 `main.js`'s row-engine section self-contained: it must stay free of Obsidian APIs so it can be unit-tested in
 plain Node.
+
+## Credits
+
+The layout is modelled on [hexo-theme-linen](https://github.com/LynanBreeze/hexo-theme-linen) by LynanBreeze
+(MIT): row gaps, caption sizing and the crop/equal-height behaviour follow its `.image-grid` rules. The row
+engine in this plugin is a reimplementation kept in step with a static-site generator's version of the same
+rules, not a copy of that theme's code.
 
 ## License
 
