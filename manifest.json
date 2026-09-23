@@ -1,7 +1,7 @@
 {
   "id": "photo-row-layout",
   "name": "Photo Row Layout",
-  "version": "0.1.3",
+  "version": "0.1.2",
   "minAppVersion": "1.4.0",
   "description": "Lay images out the way a published site will: images written one after another in a paragraph become one equal-height row, with captions, optional EXIF, and grid / masonry / scroll blocks.",
   "author": "HarderHeng",
