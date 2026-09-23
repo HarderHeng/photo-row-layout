@@ -23,6 +23,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      # 与社区目录的「构建校验」走同一条命令：npm run build → 产出仓库根的 main.js
+      - name: Build plugin
+        run: |
+          set -euo pipefail
+          npm install --no-audit --no-fund
+          npm run build
+          test -s main.js || { echo "构建没有产出 main.js"; exit 1; }
+
       # 签名构建来源证明（提交到社区目录时推荐有）
       - name: Generate artifact attestation
         uses: actions/attest@v4

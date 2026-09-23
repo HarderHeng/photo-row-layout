@@ -1,2 +1,5 @@
+# 构建产物：只进 GitHub Release，不进仓库
+main.js
+
 node_modules/
 .DS_Store
