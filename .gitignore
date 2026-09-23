@@ -1,5 +1,5 @@
-# 构建产物：只进 GitHub Release，不进仓库
-main.js
+# 构建产物：只进 GitHub Release，不进仓库（锚定根目录，别把 src/main.js 也忽略掉）
+/main.js
 
 node_modules/
 .DS_Store
